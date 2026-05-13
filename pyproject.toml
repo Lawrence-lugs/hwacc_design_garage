@@ -1,6 +1,30 @@
 [project]
 name = "hwacctools"
-dynamic = ["version"]
+version = "0.1.0"
+description = "Tools and utilities for designing neural network accelerators"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "pillow",
+    "tqdm",
+    "rectpack",
+    "joblib",
+    "matplotlib",
+    "scipy",
+    "torch",
+    "torchvision",
+    "pandas",
+    "seaborn",
+    "networkx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
 
 [build-system]
 requires = ["setuptools >= 61.0"]

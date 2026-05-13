@@ -2,3 +2,29 @@
 *cache*
 *.egg-info
 scratch*
+
+# Byte-compiled files
+*.pyc
+*.pyo
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+
+# Local environment
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/settings.json
+.idea/

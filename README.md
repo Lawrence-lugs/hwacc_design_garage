@@ -60,6 +60,10 @@ Utilities for applying rectangular bin packing algorithms on the computational g
 ## Requirements
 
 Two options: `pip install` the requirements or
-`conda env create -f env.yml`.
+`conda env create -f environment.yml`.
+
+The conda environment includes CPU-only PyTorch by default. If you have a
+CUDA-capable GPU, install the appropriate CUDA version of PyTorch manually
+after creating the environment (see https://pytorch.org/get-started/locally/).
 
 The latter will download everything, but you may only want some subfolders, so I recommend just installing as you go along.
