@@ -1,10 +1,14 @@
+"""Quantisation utilities — QuantizedTensor, fixed-point conversion, and bit packing."""
+
+from __future__ import annotations
 
 # Transferred in from https://github.com/Lawrence-lugs/eyeriss
 # Ended up useful for a bunch of other work
 
 import numpy as np
-from scipy.signal import convolve2d
 import pandas as pd
+from scipy.signal import convolve2d
+
 df = pd.DataFrame
 
 class QuantizedTensor:

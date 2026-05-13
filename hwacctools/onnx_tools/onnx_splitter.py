@@ -1,3 +1,7 @@
+"""ONNX graph splitters — split large conv/matmul nodes to fit AIMC core dimensions."""
+
+from __future__ import annotations
+
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 import numpy as np

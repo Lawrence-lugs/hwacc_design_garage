@@ -1,45 +1,42 @@
 # Code Divergence Audit
 
 This document tracks the relationship between `hwacc_design_garage` and the
-downstream repositories that once consumed it as a submodule.
+downstream repositories that consume its code.
 
 ## Background
 
 `hwacc_design_garage` was originally used as a submodule inside:
 
 - **[MARP](https://github.com/Lawrence-lugs/MARP)** — Multi-Accelerator Research Platform
-- **[QRAcc](https://github.com/Lawrence-lugs/QRAcc)** — Quantized-Re-configurable Accelerator
+- **[QrAccelerator](https://github.com/Lawrence-lugs/QrAccelerator)** — Charge-redistribution mixed-signal DNN accelerator (digital part), which uses MARP as a submodule
 
-At some point those projects extracted frozen copies of the relevant modules
-rather than continuing to track the submodule. It is currently **unknown**
-whether those frozen copies are ahead of, behind, or diverged from the code
-in this repository.
+## Audit Results (performed 2026-05-13 against MARP commit `c6bfcdf`)
 
-## Audit Status
+QrAccelerator points to the same MARP commit as a submodule, so diffing MARP
+is sufficient.  MARP does **not** embed `hwacctools/` as a frozen copy — it has
+entirely rewritten its graph-compilation logic into `marp/compile/compile.py`
+and related files.  The files that **are** shared (via copy-and-evolve) are:
 
-| Module | hwacc_design_garage | MARP frozen copy | QRAcc frozen copy | Canonical source |
-|--------|-------------------|-----------------|-------------------|-----------------|
-| `comp_graph/cnodes.py` | ? | ? | ? | **TBD** |
-| `comp_graph/cgraph.py` | ? | ? | ? | **TBD** |
-| `comp_graph/splitter.py` | ? | ? | ? | **TBD** |
-| `comp_graph/core.py` | ? | ? | ? | **TBD** |
-| `quantization/quant.py` | ? | ? | ? | **TBD** |
-| `onnx_tools/onnx_splitter.py` | ? | ? | ? | **TBD** |
+| Local file | MARP file | Diff summary |
+|---|---|---|
+| `hwacctools/onnx_tools/onnx_splitter.py` | `marp/onnx_tools/onnx_splitter.py` | **Identical** except MARP adds a module docstring and `from __future__ import annotations`. No logic differences. |
+| `hwacctools/onnx_utils.py` | `marp/onnx_tools/onnx_utils.py` | **Identical** except MARP has `from __future__ import annotations` and alphabetically sorted imports. |
+| `hwacctools/quantization/quant.py` | `marp/quantization/quant.py` | **Identical** except MARP adds a module docstring and `from __future__ import annotations`. |
 
-## How to Audit
+### Changes imported from MARP
 
-To fill in the table above, run a diff between each module in this repo and
-its counterpart in MARP / QRAcc:
+The minor style improvements (module docstrings, `from __future__ import annotations`,
+sorted imports) have been applied to the three files above.
 
-```bash
-# Example: compare cnodes.py with MARP's frozen copy
-diff hwacctools/comp_graph/cnodes.py \
-     path/to/MARP/hwacc_design_garage/hwacctools/comp_graph/cnodes.py
-```
+### MARP-only code (not ported back)
+
+MARP's `marp/compile/` is a purpose-built compiler that maps ONNX sub-graphs
+to MARP accelerator micro-programs. It has no direct equivalent in
+`hwacctools/` and is out of scope for this repo.
 
 ## Decision
 
-Once the audit is complete, pick one canonical source for each module and
-merge improvements back. Going forward, downstream projects should depend on
-this package via `pip install` (pinned to a release tag) rather than
-embedding a frozen copy.
+Going forward, improvements to the shared modules (`onnx_splitter.py`,
+`onnx_utils.py`, `quant.py`) should originate here and be manually synced to
+MARP, or MARP should depend on this package via `pip install`. The modules are
+small enough that either approach works.

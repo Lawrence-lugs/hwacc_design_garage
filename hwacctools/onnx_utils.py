@@ -1,11 +1,14 @@
-import onnxruntime as ort
+"""ONNX model manipulation — inference helpers, graph surgery, and initialiser access."""
+
+from __future__ import annotations
+
+from typing import Any, Sequence
+
 import numpy as np
-from torchvision import transforms
-from PIL import Image
 import onnx
-from onnx import helper, numpy_helper
-from typing import Sequence, Any
 import onnxruntime
+import onnxruntime as ort
+from onnx import helper, numpy_helper
 from onnx.onnx_pb import (
     AttributeProto,
     FunctionProto,

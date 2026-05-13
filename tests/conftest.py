@@ -1,7 +1,5 @@
 import pytest
 import onnx
-from torchvision import transforms
-from PIL import Image
 import numpy as np
 from hwacctools.comp_graph import splitter, cnodes, cgraph, core
 
@@ -35,6 +33,8 @@ def nx_model(modelpath):
 
 @pytest.fixture
 def img_array():
+    from torchvision import transforms
+    from PIL import Image
     img = Image.open('images/imagenet_finch.jpeg')
     img_tensor = transforms.ToTensor()(img).float()
     img_tensor = transforms.CenterCrop(224)(img_tensor)
