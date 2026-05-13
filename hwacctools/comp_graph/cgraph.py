@@ -4,6 +4,7 @@ import numpy as np
 from . import cnodes
 from tqdm import tqdm
 from . import splitter
+from . import cnode_factory
 import os
 from .. import onnx_utils
 
@@ -55,7 +56,7 @@ class Cgraph(object):
         '''
         node_list = []
         for node in nx_model.graph.node:
-            a = cnodes.get_cnode_from_onnx_node(node, nx_model, channel_minor=True)
+            a = cnode_factory.get_cnode_from_onnx_node(node, nx_model, channel_minor=True)
             if type(a) == list:
                 node_list.extend(a)
             else:
@@ -220,6 +221,18 @@ class Cgraph(object):
             if hasattr(node,'rid'):
                 rid_to_nid[node.rid] = node.nid
         return rid_to_nid
+
+    def get_matrix_dict(self):
+        '''
+        Returns a dictionary mapping node index to matrix for all
+        matrix-containing nodes in the cgraph.
+        '''
+        mx_dict = dict()
+        for i, node in enumerate(self.nodes):
+            if hasattr(node, 'matrix'):
+                mx_dict[i] = node.matrix
+        return mx_dict
+
 
 def split_convolutions(in_cgraph:Cgraph,H:int,W:int):
     '''
